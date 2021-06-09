@@ -9,6 +9,7 @@ from profit.util import load
 from profit.sur import Surrogate
 from matplotlib import cm as colormaps
 from matplotlib.colors import to_hex as color2hex
+from dash.exceptions import PreventUpdate
 
 def init_app(config):
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -273,14 +274,14 @@ def init_app(config):
         elif trigger_id == 'add-filter':
             for i in range(len(text)):
                 if text[i]['props']['children'][0] == filter_dd:
-                    return text, log, slider, range_div, center_div, active_div, dig_div, reset_div, clear_div
-            ind = invars.index(filter_dd)
-            txt = filter_dd
-            new_text = html.Div(id={'type': 'dyn-text', 'index': ind}, children=[txt], style={**input_div_sty, **input_sty})
+                    #return text, log, slider, range_div, center_div, active_div, dig_div, reset_div, clear_div
+                    raise PreventUpdate
+            ind = invars.index(filter_dd) #index of the variable
+            new_text = html.Div(id={'type': 'dyn-text', 'index': ind}, children=[filter_dd], style={**input_div_sty, **input_sty})
             new_log = html.Div(id={'type': 'dyn-log', 'index': ind}, style={**input_div_sty, 'text-align':'center'}, children=[
                 dcc.Checklist(id={'type': 'param-log', 'index': ind}, options=[{'label': '', 'value': 'log'}])], )
             new_slider = html.Div(id={'type': 'dyn-slider', 'index': ind}, style=input_div_sty, children=[
-                create_slider(txt)], )
+                create_slider(filter_dd)], )
             new_range = html.Div(id={'type': 'dyn-range', 'index': ind}, style=input_div_sty, children=[
                 dcc.Input(id={'type': 'param-range-min', 'index': ind}, type='number', debounce=True, style={**input_sty, 'appearance': 'textfield'}),
                 dcc.Input(id={'type': 'param-range-max', 'index': ind}, type='number', debounce=True, style={**input_sty, 'appearance': 'textfield'}),
